@@ -1,0 +1,83 @@
+import 'package:flutter/material.dart';
+
+void main() => runApp(StudyApp());
+
+class StudyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(primarySwatch: Colors.indigo),
+      home: StudyHomePage(),
+    );
+  }
+}
+
+class StudyHomePage extends StatefulWidget {
+  @override
+  _StudyHomePageState createState() => _StudyHomePageState();
+}
+
+class _StudyHomePageState extends State<StudyHomePage> {
+  // قائمة المهام الدراسية
+  List<String> studyTasks = ["مراجعة رياضيات", "حل واجب الفيزياء", "قراءة فصل التاريخ"];
+  final TextEditingController _controller = TextEditingController();
+
+  void _addTask() {
+    if (_controller.text.isNotEmpty) {
+      setState(() {
+        studyTasks.add(_controller.text);
+        _controller.clear();
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('منظم دراستي الذكي')),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _controller,
+                    decoration: InputDecoration(
+                      hintText: 'أضف مهمة دراسية جديدة...',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10),
+                ElevatedButton(onPressed: _addTask, child: Icon(Icons.add)),
+              ],
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: studyTasks.length,
+              itemBuilder: (context, index) {
+                return Card(
+                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                  child: ListTile(
+                    leading: Icon(Icons.book, color: Colors.indigo),
+                    title: Text(studyTasks[index]),
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete, color: Colors.red),
+                      onPressed: () {
+                        setState(() => studyTasks.removeAt(index));
+                      },
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
